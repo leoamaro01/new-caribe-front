@@ -1,6 +1,7 @@
 import {fetchFaculties} from "@/classes/utilities";
 import Image from "next/image";
 import {AthleteComponent} from "@/components/AthleteComponent";
+import {FacultyImage} from "@/components/FacultyComponent";
 
 export default function FacultyPage({params}: { params: { name: string } }) {
 
@@ -12,13 +13,7 @@ export default function FacultyPage({params}: { params: { name: string } }) {
 
   return <div className="p-20">
     <div className="flex">
-      <Image
-        className="rounded-3xl flex-shrink-0"
-        src={faculty.logo}
-        alt={`${faculty.acronym} logo`}
-        width={250}
-        height={250}
-      />
+      {FacultyImage(faculty, "rounded-3xl flex-shrink-0",250,250)}
       <div className="ml-10 flex flex-col justify-center">
         <h1 className="font-bold text-8xl">
           {faculty.acronym}

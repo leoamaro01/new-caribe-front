@@ -23,13 +23,7 @@ export default function FacultyComponent(faculty: Faculty) {
       className="rounded-3xl border-2 border-opacity-5 bg-gray-800/20 transition-all hover:bg-gray-700/20 p-5 m-5"
       key={faculty.id}>
       <div className="flex">
-        <Image
-          className="rounded-3xl flex-shrink-0"
-          src={faculty.logo}
-          alt={`${faculty.acronym} logo`}
-          width={125}
-          height={125}
-        />
+        {FacultyImage(faculty, "rounded-3xl flex-shrink-0",125,125)}
         <div className="ml-4">
           <h1 className="font-bold text-4xl">
             {faculty.acronym}
@@ -57,4 +51,14 @@ export default function FacultyComponent(faculty: Faculty) {
       </div>
     </div>
   );
+}
+
+export function FacultyImage(faculty: Faculty, className: string, width: number, height:number){
+  return <Image
+      className={className}
+      src={faculty.logo}
+      alt={`${faculty.acronym} logo`}
+      width={width}
+      height={height}
+  />
 }
