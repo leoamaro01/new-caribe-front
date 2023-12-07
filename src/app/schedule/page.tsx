@@ -7,7 +7,7 @@ export default function SchedulePage() {
   let events: Event[] = fetchEvents();
   let faculties: Faculty[] = fetchFaculties();
 
-  return <div className="items-center pl-40 pr-40 pt-12">
+  return <div>
     {events.map((event) => EventComponent(event, faculties))}
   </div>
 }
