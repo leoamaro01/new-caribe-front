@@ -1,12 +1,28 @@
-import {Faculty} from "@/classes/faculty";
-import {Event} from "@/classes/event";
-import {seededEvents} from "@/seed/events";
+export function stringToColor(string: string) {
+  let hash = 0;
+  let i;
 
-export async function fetchFaculties(): Promise<Faculty[]> {
-    // return seededFaculties;
-    return await fetch("localhost:5136/api/Faculties?year=2023").then(r => r.json());
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+ 
+  return color;
 }
 
-export function fetchEvents(): Event[] {
-    return seededEvents;
+export function stringAvatar(name: string) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+  };
 }

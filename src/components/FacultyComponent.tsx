@@ -1,64 +1,78 @@
-import Image from "next/image";
 import {Faculty} from "@/classes/faculty";
-import Link from "next/link";
+import {FacultyAvatar} from "@/components/FacultyAvatar";
+import {Box, Button, Card, CardActions, CardContent, CardHeader, Grid, Typography} from "@mui/material";
 
-export default function FacultyComponent(faculty: Faculty) {
+export interface FacultyComponentProps {
+  faculty: Faculty;
+  onEditFaculty: (arg0: Faculty) => void;
+  onDeleteFaculty: (arg0: Faculty) => void;
+}
+
+export default function FacultyComponent(props: FacultyComponentProps) {
+  const faculty = props.faculty;
   let rankingColor;
   switch (faculty.ranking) {
     case 1:
-      rankingColor = "text-yellow-400";
+      rankingColor = "gold";
       break;
     case 2:
-      rankingColor = "text-gray-400";
+      rankingColor = "silver";
       break;
     case 3:
-      rankingColor = "text-yellow-800";
+      rankingColor = "#CD7F32";
       break;
     default:
       rankingColor = "";
       break;
   }
   return (
-    <div
-      className="rounded-3xl border-2 border-opacity-5 bg-gray-800/20 transition-all hover:bg-gray-700/20 p-5 m-5"
-      key={faculty.id}>
-      <div className="flex">
-        {FacultyImage(faculty, "rounded-3xl flex-shrink-0",125,125)}
-        <div className="ml-4">
-          <h1 className="font-bold text-4xl">
-            {faculty.acronym}
-          </h1>
-          <h2 className="text-2xl">
-            {faculty.name}
-          </h2>
-        </div>
-        <h1 className={"text-5xl italic text-right flex-grow " + rankingColor}>
-          #{faculty.ranking}
-        </h1>
-      </div>
-      <p className="text-center m-5 text-2xl">🐶 Mascota: {faculty.mascot}</p>
-      <div className="grid grid-cols-3 mt-10">
-        <p className="text-center text-xl">🥇 Medallas de Oro: {faculty.goldMedals}</p>
-        <p className="text-center text-xl">🥈 Medallas de Plata: {faculty.silverMedals}</p>
-        <p className="text-center text-xl">🥉 Medallas de Bronce: {faculty.bronzeMedals}</p>
-      </div>
-      <div
-        className="text-center text-2xl italic font-bold mt-10 mb-5">
-        <Link
-          href={`/faculties/${faculty.acronym.toLowerCase()}`}>
-          Ir a la página de {faculty.acronym}
-        </Link>
-      </div>
-    </div>
+    <Grid item xs={12} sm={6} md={4} lg={3}>
+      <Card>
+        <CardHeader avatar={<FacultyAvatar faculty={faculty} width={128} height={128}/>}
+                    title={faculty.name}
+                    subheader={faculty.acronym}/>
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            Mascota: {faculty.mascot}
+          </Typography>
+          <Typography variant="h5" sx={{mt: 1}}>
+            Medallas
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            🥇 Oro: {faculty.goldMedals}
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            🥈 Plata: {faculty.silverMedals}
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            🥉 Bronce: {faculty.bronzeMedals}
+          </Typography>
+          <Box sx={{display: 'flex', alignItems: 'center', mt: 2}}>
+            <Typography variant="h5" sx={{alignSelf: 'center'}}>
+              Ranking:
+            </Typography>
+            <Typography variant="h3"
+                        sx={{
+                          alignSelf: 'center',
+                          ml: 1,
+                          color: rankingColor,
+                          fontStyle: 'italic'
+                        }}>#{faculty.ranking}</Typography>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <Button href={`/faculties/${faculty.acronym.toLowerCase()}`} size='small'>Ver</Button>
+          <Button onClick={(e) => props.onEditFaculty(props.faculty)}
+                  size='small'>
+            Editar
+          </Button>
+          <Button onClick={(e) => props.onDeleteFaculty(props.faculty)}
+                  size='small'>
+            Eliminar
+          </Button>
+        </CardActions>
+      </Card>
+    </Grid>
   );
 }
 
-export function FacultyImage(faculty: Faculty, className: string, width: number, height:number){
-  return <Image
-      className={className}
-      src={faculty.logo}
-      alt={`${faculty.acronym} logo`}
-      width={width}
-      height={height}
-  />
-}

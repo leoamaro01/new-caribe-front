@@ -5,7 +5,7 @@ export class Faculty {
   name!: string;
   acronym!: string;
   mascot!: string;
-  logo!: string;
+  logo!: File;
   athletes!: Athlete[];
   goldMedals!: number;
   silverMedals!: number;

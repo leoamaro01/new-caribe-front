@@ -1,29 +1,31 @@
 import {Athlete} from "@/classes/athlete";
 
-export const matcomAthletes: Athlete[] = [{
+export const seededAthletes: Athlete[] = [{
   id: 0,
   name: "Leonardo Amaro Rodríguez",
   nick: "Leo",
-  dateOfBirth: new Date(2001, 6, 4),
+  dateOfBirth: "4/6/2001",
   photo: "/leo.jpeg"
 }, {
   id: 2,
   name: "Alfredo Montero López",
   nick: "Freddy",
-  dateOfBirth: new Date(2001, 4, 29),
+  dateOfBirth: "29/5/2001",
   photo: "/freddy.jpeg"
-}];
-
-export const ekoAthletes: Athlete[] = [{
+}, {
   id: 1,
   name: "Francisco Vicente Suárez Bellón",
   nick: "Paco",
-  dateOfBirth: new Date(2001, 3, 6),
+  dateOfBirth: "4/6/2001",
   photo: "/paco.jpeg"
 }, {
   id: 3,
   name: "Alfredo Montero López",
   nick: "Freddy",
-  dateOfBirth: new Date(2001, 4, 29),
+  dateOfBirth: "29/5/2001",
   photo: "/freddy.jpeg"
 }]
+
+export const matcomAthletes: Athlete[] = [seededAthletes[0], seededAthletes[1]];
+
+export const ekoAthletes: Athlete[] = [seededAthletes[2], seededAthletes[3]];

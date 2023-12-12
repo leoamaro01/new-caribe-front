@@ -1,31 +1,43 @@
-import Image from "next/image";
 import {Athlete} from "@/classes/athlete";
+import {Button, Card, CardActions, CardContent, CardHeader, Grid, Typography} from "@mui/material";
+import {AthleteAvatar} from "@/components/AthleteAvatar";
+import {Major} from "@/classes/major";
 
-export function AthleteComponent(athlete: Athlete) {
+export interface AthleteComponentProps {
+  athlete: Athlete;
+  majors: Major[];
+  onEditAthlete: (arg0: Athlete) => void
+  onDeleteAthlete: (arg0: Athlete) => void
+}
+
+export function AthleteComponent(props: AthleteComponentProps) {
   return (
-    <div
-      className="rounded-3xl border-2 border-opacity-5 bg-gray-800/20 transition-all hover:bg-gray-700/20 p-5 m-5"
-      key={athlete.id}>
-      <div className="flex">
-        <Image
-          className="rounded-3xl flex-shrink-0"
-          src={athlete.photo}
-          alt={`${athlete.nick} picture`}
-          width={125}
-          height={125}
-        />
-        <div className="ml-4">
-          <h1 className="font-bold text-4xl">
-            {athlete.name}
-          </h1>
-          <h2 className="text-2xl">
-            &quot;{athlete.nick}&quot;
-          </h2>
-          <p>
-            Fecha de Nacimiento: {athlete.dateOfBirth.toDateString()}
-          </p>
-        </div>
-      </div>
-    </div>
+    <Grid item xs={12} sm={6} md={4} lg={3}>
+      <Card>
+        <CardHeader
+          avatar={<AthleteAvatar athlete={props.athlete} width={64} height={64}/>}
+          title={props.athlete.name}
+          subheader={props.athlete.nick}/>
+        <CardContent>
+          <Typography sx={{my: 1}} variant="body2" color="text.secondary">
+            Fecha de Nacimiento:{' '}{props.athlete.dateOfBirth}
+          </Typography>
+          <br/>
+          <Typography sx={{my: 1}} variant="body2" color="text.secondary">
+            Carrera:{' '}{props.majors.find(m => m.id == props.athlete.majorId)!.name}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button onClick={(e) => props.onEditAthlete(props.athlete)}
+                  size='small'>
+            Editar
+          </Button>
+          <Button onClick={(e) => props.onDeleteAthlete(props.athlete)}
+                  size='small'>
+            Eliminar
+          </Button>
+        </CardActions>
+      </Card>
+    </Grid>
   );
 }

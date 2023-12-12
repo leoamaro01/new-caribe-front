@@ -1,13 +1,34 @@
+'use client'
+
 import {Event} from "@/classes/event";
-import {fetchEvents, fetchFaculties} from "@/classes/utilities";
-import {EventComponent} from "@/components/EventComponent";
 import {Faculty} from "@/classes/faculty";
+import {useEffect, useState} from "react";
+import {fetchEvents, fetchFaculties} from "@/classes/requests";
+import NavBar from "@/components/NavBar";
+import {Box, Container, Typography} from "@mui/material";
+import {EventComponent} from "@/components/EventComponent";
 
 export default function SchedulePage() {
-  let events: Event[] = fetchEvents();
-  let faculties: Faculty[] = fetchFaculties();
+  const [faculties, setFaculties] = useState<Faculty[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
 
-  return <div>
-    {events.map((event) => EventComponent(event, faculties))}
-  </div>
+  useEffect(() => {
+    fetchFaculties()
+      .then(setFaculties)
+      .then(() => fetchEvents()
+        .then(setEvents));
+  }, []);
+
+  return <>
+    <NavBar/>
+    <Container sx={{mt: 5}}>
+      <Typography variant="h2">Eventos</Typography>
+      <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
+        {events.map(e =>
+          <EventComponent key={e.id}
+                          faculties={faculties}
+                          event={e}/>)}
+      </Box>
+    </Container>
+  </>;
 }
