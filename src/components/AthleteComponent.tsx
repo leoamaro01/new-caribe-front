@@ -6,6 +6,7 @@ import {Major} from "@/classes/major";
 export interface AthleteComponentProps {
   athlete: Athlete;
   majors: Major[];
+  hasPrivileges: boolean;
   onEditAthlete: (arg0: Athlete) => void
   onDeleteAthlete: (arg0: Athlete) => void
 }
@@ -22,21 +23,21 @@ export function AthleteComponent(props: AthleteComponentProps) {
           <Typography sx={{my: 1}} variant="body2" color="text.secondary">
             Fecha de Nacimiento:{' '}{props.athlete.dateOfBirth}
           </Typography>
-          <br/>
-          <Typography sx={{my: 1}} variant="body2" color="text.secondary">
-            Carrera:{' '}{props.majors.find(m => m.id == props.athlete.majorId)!.name}
-          </Typography>
+          {/*<br/>*/}
+          {/*<Typography sx={{my: 1}} variant="body2" color="text.secondary">*/}
+          {/*  Carrera:{' '}{props.majors.find(m => m.id == props.athlete.majorId)!.name}*/}
+          {/*</Typography>*/}
         </CardContent>
-        <CardActions>
-          <Button onClick={(e) => props.onEditAthlete(props.athlete)}
-                  size='small'>
-            Editar
-          </Button>
-          <Button onClick={(e) => props.onDeleteAthlete(props.athlete)}
-                  size='small'>
-            Eliminar
-          </Button>
-        </CardActions>
+        {props.hasPrivileges && <CardActions>
+            <Button onClick={(e) => props.onEditAthlete(props.athlete)}
+                    size="small">
+                Editar
+            </Button>
+            <Button onClick={(e) => props.onDeleteAthlete(props.athlete)}
+                    size="small">
+                Eliminar
+            </Button>
+        </CardActions>}
       </Card>
     </Grid>
   );

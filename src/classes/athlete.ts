@@ -3,6 +3,5 @@ export class Athlete {
   name!: string;
   nick!: string;
   dateOfBirth!: string;
-  majorId!: number;
   photo!: File;
 }

@@ -6,10 +6,12 @@ export interface FacultyComponentProps {
   faculty: Faculty;
   onEditFaculty: (arg0: Faculty) => void;
   onDeleteFaculty: (arg0: Faculty) => void;
+  hasPrivileges: boolean;
 }
 
 export default function FacultyComponent(props: FacultyComponentProps) {
   const faculty = props.faculty;
+
   let rankingColor;
   switch (faculty.ranking) {
     case 1:
@@ -61,15 +63,17 @@ export default function FacultyComponent(props: FacultyComponentProps) {
           </Box>
         </CardContent>
         <CardActions>
-          <Button href={`/faculties/${faculty.acronym.toLowerCase()}`} size='small'>Ver</Button>
-          <Button onClick={(e) => props.onEditFaculty(props.faculty)}
-                  size='small'>
-            Editar
-          </Button>
-          <Button onClick={(e) => props.onDeleteFaculty(props.faculty)}
-                  size='small'>
-            Eliminar
-          </Button>
+          <Button href={`/faculties/${faculty.acronym}`} size='small'>Ver</Button>
+          {props.hasPrivileges && <>
+              <Button onClick={(e) => props.onEditFaculty(props.faculty)}
+                      size="small">
+                  Editar
+              </Button>
+              <Button onClick={(e) => props.onDeleteFaculty(props.faculty)}
+                      size='small'>
+                  Eliminar
+              </Button>
+          </>}
         </CardActions>
       </Card>
     </Grid>

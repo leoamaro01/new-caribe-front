@@ -2,14 +2,26 @@
 
 import {AppBar, Box, Button, Toolbar, Typography} from '@mui/material';
 import LoginComponent from "@/components/LoginComponent";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {SignUpComponent} from "@/components/SignUpComponent";
+import {authTokenStorageKey} from "@/classes/constants";
+import {IsLoggedIn} from "@/classes/requests";
 
 export default function NavBar() {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
-  const signedIn = false;
+  const [signedIn, setSignedIn] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    IsLoggedIn()
+      .then(setSignedIn);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem(authTokenStorageKey);
+    window.location.reload();
+  }
 
   return <>
     <LoginComponent show={showLogin} onClose={(e) => setShowLogin(false)} onGoToSignUp={(e) => {
@@ -31,15 +43,17 @@ export default function NavBar() {
           <Button color="inherit" href="/faculties">Facultades</Button>
           <Button color="inherit" href="/schedule">Eventos</Button>
         </Box>
-        <Box>
-          {signedIn
-            ? <Button color="inherit">Cerrar Sesión</Button>
-            : <>
-              <Button color="inherit" onClick={(e) => setShowLogin(true)}>Inicia Sesión</Button>
-              <Button color="inherit" onClick={(e) => setShowSignUp(true)}>Regístrate</Button>
-            </>
-          }
-        </Box>
+        {signedIn != undefined &&
+            <Box>
+              {signedIn
+                ? <Button color="inherit" onClick={(e) => handleLogout()}>Cerrar Sesión</Button>
+                : <>
+                  <Button color="inherit" onClick={(e) => setShowLogin(true)}>Inicia Sesión</Button>
+                  <Button color="inherit" onClick={(e) => setShowSignUp(true)}>Regístrate</Button>
+                </>
+              }
+            </Box>
+        }
       </Toolbar>
     </AppBar>
   </>;

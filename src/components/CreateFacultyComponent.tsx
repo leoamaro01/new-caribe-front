@@ -3,7 +3,7 @@
 import React, {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {Avatar, Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography} from "@mui/material";
 import {Faculty} from "@/classes/faculty";
-import {createFormData, editFormData} from "@/classes/requests";
+import {createFormData, editFormData, FetchFacultyPhoto} from "@/classes/requests";
 
 export interface CreateFacultyProps {
   show: boolean;
@@ -41,7 +41,8 @@ export default function CreateFacultyComponent(props: CreateFacultyProps) {
       setName(props.updatingFaculty.name);
       setAcronym(props.updatingFaculty.acronym);
       setMascot(props.updatingFaculty.mascot);
-      setLogo(props.updatingFaculty.logo)
+      FetchFacultyPhoto(props.updatingFaculty.id)
+        .then(setLogo);
     }
   }, [props.updatingFaculty]);
 
@@ -68,6 +69,7 @@ export default function CreateFacultyComponent(props: CreateFacultyProps) {
     formData.append('acronym', acronym);
     formData.append('mascot', mascot);
     formData.append('logo', logo!);
+    formData.append('photoMimeType', logo!.type);
 
     if (props.updatingFaculty)
       await editFormData("/Faculties", props.updatingFaculty.id,
@@ -132,10 +134,10 @@ export default function CreateFacultyComponent(props: CreateFacultyProps) {
             </Typography>
             <br/>
         </>}
+        <Button sx={{mt: 3}} type="submit" variant='contained'>
+          {props.updatingFaculty ? 'Editar' : 'Crear'}
+        </Button>
       </Box>
-      <Button sx={{mt: 3}} type="submit" variant='contained'>
-        {props.updatingFaculty ? 'Editar' : 'Crear'}
-      </Button>
     </DialogContent>
   </Dialog>;
 }

@@ -2,14 +2,12 @@
 
 import {Event} from "@/classes/event";
 import {useEffect, useState} from "react";
-import Errors from "undici-types/errors";
 import {Faculty} from "@/classes/faculty";
 import {Score} from "@/classes/score";
 import {TeamMember} from "@/classes/team-member";
 import {Accordion, AccordionDetails, AccordionSummary, Box, Paper, Typography} from "@mui/material";
 import {FacultyAvatar} from "@/components/FacultyAvatar";
 import {ScoreComponent} from "@/components/ScoreComponent";
-import InvalidArgumentError = Errors.InvalidArgumentError;
 
 export interface TeamScoredEventProps {
   event: Event;
@@ -41,7 +39,7 @@ export function TeamScoredEventComponent(props: TeamScoredEventProps) {
     setTeams(props.event.teamScores.map(s => {
       const faculty = props.faculties.find(f => f.id === s.team.facultyId);
       if (!faculty)
-        throw new InvalidArgumentError(`Faculty ${s.team.facultyId} not found rendering events`);
+        throw new Error(`Faculty ${s.team.facultyId} not found rendering events`);
 
       const data: EventTeamData = {
         teamName: s.team.name,

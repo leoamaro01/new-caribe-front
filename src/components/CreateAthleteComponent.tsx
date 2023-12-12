@@ -1,21 +1,8 @@
 'use client'
 
 import React, {ChangeEvent, FormEvent, useEffect, useState} from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography
-} from "@mui/material";
-import {createFormData, editFormData, fetchMajors} from "@/classes/requests";
+import {Avatar, Box, Button, Dialog, DialogContent, DialogTitle, TextField, Typography} from "@mui/material";
+import {createFormData, editFormData, FetchAthletePhoto} from "@/classes/requests";
 import dayjs, {Dayjs} from "dayjs";
 import {DatePicker} from "@mui/x-date-pickers";
 import {Athlete} from "@/classes/athlete";
@@ -37,17 +24,17 @@ export default function CreateAthleteComponent(props: CreateAthleteProps) {
   const [dateOfBirth, setDateOfBirth] = useState<Dayjs | null>(null);
   const [nick, SetNick] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
-  const [majorId, setMajorId] = useState(-1);
+  // const [facultyId, setFacultyId] = useState(-1);
 
   const [nameError, setNameError] = useState(false);
   const [dateOfBirthError, setDateOfBirthError] = useState(false);
   const [nickError, SetNickError] = useState(false);
   const [photoError, setPhotoError] = useState(false);
-  const [majorIdError, setMajorIdError] = useState(false);
+  // const [facultyError, setFacultyError] = useState(false);
 
   const [error, setError] = useState(false);
 
-  const [majorOptions, setMajorOptions] = useState<ValueLabel[]>([]);
+  // const [facultyOptions, setFacultyOptions] = useState<ValueLabel[]>([]);
 
   useEffect(() => {
     setError(false);
@@ -56,31 +43,32 @@ export default function CreateAthleteComponent(props: CreateAthleteProps) {
     setDateOfBirthError(false);
     SetNickError(false);
     setPhotoError(false);
-    setMajorIdError(false);
+    // setFacultyError(false);
 
     if (!props.updatingAthlete) {
       setName('');
       setDateOfBirth(null);
       SetNick('');
       setPhoto(null);
-      setMajorId(-1);
+      // setFacultyId(-1);
     } else {
       setName(props.updatingAthlete.name);
       setDateOfBirth(dayjs(props.updatingAthlete.dateOfBirth, 'DD/MM/YYYY'));
       SetNick(props.updatingAthlete.nick);
-      setPhoto(props.updatingAthlete.photo);
-      setMajorId(props.updatingAthlete.majorId);
+      FetchAthletePhoto(props.updatingAthlete.id)
+        .then(setPhoto);
+      // setFacultyId(-1); 
     }
   }, [props.updatingAthlete]);
 
-  useEffect(() => {
-    const updateMajors = async () => {
-      const majors = await fetchMajors(props.facultyId);
-      setMajorOptions(majors.map(m => ({value: m.id, label: m.name})));
-    }
-
-    updateMajors().catch(error => console.error('Failed to update majors:', error));
-  }, [props.facultyId]);
+  // useEffect(() => {
+  //   const updatingFaculties = async () => {
+  //     const majors = await fetchFaculties();
+  //     setFacultyOptions(majors.map(f => ({value: f.id, label: f.name})));
+  //   }
+  //
+  //   updatingFaculties().catch(error => console.error('Failed to update majors:', error));
+  // }, []);
 
 
   const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -97,17 +85,18 @@ export default function CreateAthleteComponent(props: CreateAthleteProps) {
     setDateOfBirthError(dateOfBirth === null);
     SetNickError(nick.trim() === '');
     setPhotoError(photo === null);
-    setMajorIdError(majorId == -1);
+    // setMajorError(major == -1);
 
-    if (name.trim() === '' || dateOfBirth === null || nick.trim() === '' || photo === null || majorId == -1)
+    if (name.trim() === '' || dateOfBirth === null || nick.trim() === '' || photo === null)
       return;
 
     const formData = new FormData();
     formData.append('name', name);
     formData.append('nick', nick);
-    formData.append('dateOfBirth', dateOfBirth!.format('DD/MM/YYY'));
+    formData.append('dateOfBirth', dateOfBirth!.format('DD/MM/YYYY'));
     formData.append('photo', photo!);
-    formData.append('majorId', majorId.toString());
+    formData.append('facultyId', props.facultyId.toString());
+    formData.append('photoMimeType', photo!.type);
 
     if (props.updatingAthlete)
       await editFormData("/Athletes", props.updatingAthlete.id,
@@ -152,20 +141,20 @@ export default function CreateAthleteComponent(props: CreateAthleteProps) {
         {dateOfBirthError && <><Typography sx={{fontStyle: "italic", mt: -1, mb: 1}} color="red" variant="caption">
             Inserte una fecha de nacimiento.
         </Typography><br/></>}
-        <FormControl sx={{my: 1, width: 300}}>
-          <InputLabel id="major-select-label">Carrera</InputLabel>
-          <Select sx={{textAlign: 'left'}}
-                  labelId="major-select-label"
-                  value={majorId == -1 ? '' : majorId}
-                  error={majorIdError}
-                  label="Carrera"
-                  onChange={(e) => setMajorId(e.target.value as number)}
-          >
-            {majorOptions.map(m =>
-              <MenuItem key={m.value} value={m.value}>{m.label}</MenuItem>)}
-          </Select>
-        </FormControl>
-        <br/>
+        {/*<FormControl sx={{my: 1, width: 300}}>*/}
+        {/*  <InputLabel id="major-select-label">Facultad</InputLabel>*/}
+        {/*  <Select sx={{textAlign: 'left'}}*/}
+        {/*          labelId="major-select-label"*/}
+        {/*          value={facultyId == -1 ? '' : facultyId}*/}
+        {/*          error={facultyError}*/}
+        {/*          label="Facultad"*/}
+        {/*          onChange={(e) => setFacultyId(e.target.value as number)}*/}
+        {/*  >*/}
+        {/*    {facultyOptions.map(m =>*/}
+        {/*      <MenuItem key={m.value} value={m.value}>{m.label}</MenuItem>)}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>*/}
+        {/*<br/>*/}
         <input
           accept="image/*"
           style={{display: 'none'}}
@@ -194,7 +183,6 @@ export default function CreateAthleteComponent(props: CreateAthleteProps) {
             </Typography>
             <br/>
         </>}
-
         <Button sx={{mt: 3}} type="submit" variant='contained'>
           {props.updatingAthlete ? 'Editar' : 'Crear'}
         </Button>

@@ -1,1 +1,2 @@
-export const backendUrl = "http://localhost:5136/api"; 
+export const backendUrl = "https://localhost:7221/api";
+export const authTokenStorageKey = "authToken";
